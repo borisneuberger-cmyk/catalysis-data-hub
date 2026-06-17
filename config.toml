@@ -1,0 +1,12 @@
+[theme]
+# Ein sehr sauberes, professionelles Light-Theme
+primaryColor = "#005b96"
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f4f6f9"
+textColor = "#1e293b"
+font = "sans serif"
+
+[server]
+# Versteckt den nervigen Deploy-Button und das Hamburger-Menü oben rechts
+# Das lässt es nach einer echten App aussehen, nicht nach einem Streamlit-Skript
+toolbarMode = "minimal"
