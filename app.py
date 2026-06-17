@@ -1,3 +1,12 @@
+import streamlit as st
+import pymongo
+import pandas as pd
+import urllib.parse
+import os
+from dotenv import load_dotenv
+from rdkit import Chem
+from rdkit.Chem import Draw
+
 # --- 1. INITIALIZATION ---
 st.set_page_config(
     page_title="Catalysis Data Hub",
