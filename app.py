@@ -15,21 +15,21 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Datenbank-Verbindung: Cloud (Streamlit Secrets) vs. Lokal (.env)
+# Database Connection: Cloud (Streamlit Secrets) vs. Local (.env)
 load_dotenv()
 
 try:
-    # Versuch 1: Streamlit Cloud Secrets
+    # Attempt 1: Streamlit Cloud Secrets
     USERNAME = st.secrets["DB_USER"]
     PASSWORD = st.secrets["DB_PASS"]
 except Exception:
-    # Versuch 2: Lokale .env Datei
+    # Attempt 2: Local .env File
     USERNAME = os.getenv("DB_USER")
     PASSWORD = os.getenv("DB_PASS")
 
-# Sicherheits-Check, damit die App nicht mehr hart abstürzt, falls Passwörter fehlen
+# Safety Check: Stop execution if credentials are missing
 if not USERNAME or not PASSWORD:
-    st.error("🚨 Datenbank-Zugangsdaten fehlen! Bitte in den Streamlit 'Advanced Settings' unter 'Secrets' eintragen.")
+    st.error("🚨 Database credentials missing! Please configure them in Streamlit 'Advanced Settings' under 'Secrets'.")
     st.stop()
 
 @st.cache_resource
@@ -59,14 +59,20 @@ with st.sidebar:
     nmr_range = st.slider("13C NMR Chemical Shift (ppm)", 0.0, 220.0, (0.0, 220.0), step=1.0)
 
     st.divider()
-    search_triggered = st.button("Execute Database Query", use_container_width=True, type="primary")
+    
+    # SESSION STATE LOGIC: Prevent app reset on download button click
+    if "search_triggered" not in st.session_state:
+        st.session_state.search_triggered = False
+
+    if st.button("Execute Database Query", use_container_width=True, type="primary"):
+        st.session_state.search_triggered = True
 
 # --- 3. MAIN DASHBOARD ---
 st.title("Catalysis Data Management System")
 st.subheader("Team 1 | MVP Release: FAIR Data Retrieval")
 st.divider()
 
-if not search_triggered:
+if not st.session_state.search_triggered:
     c1, c2, c3 = st.columns(3)
     c1.metric("Cloud Status", "Online", "Connected via Atlas")
     c2.metric("Dataset Size", "2,000 Target", "High-Fidelity Data")
