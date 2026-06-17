@@ -1,12 +1,3 @@
-import streamlit as st
-import pymongo
-import pandas as pd
-import urllib.parse
-import os
-from dotenv import load_dotenv
-from rdkit import Chem
-from rdkit.Chem import Draw
-
 # --- 1. INITIALIZATION ---
 st.set_page_config(
     page_title="Catalysis Data Hub",
@@ -15,10 +6,22 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Database Connection (via .env)
+# Datenbank-Verbindung: Cloud (Streamlit Secrets) vs. Lokal (.env)
 load_dotenv()
-USERNAME = os.getenv("DB_USER")
-PASSWORD = os.getenv("DB_PASS")
+
+try:
+    # Versuch 1: Streamlit Cloud Secrets
+    USERNAME = st.secrets["DB_USER"]
+    PASSWORD = st.secrets["DB_PASS"]
+except Exception:
+    # Versuch 2: Lokale .env Datei
+    USERNAME = os.getenv("DB_USER")
+    PASSWORD = os.getenv("DB_PASS")
+
+# Sicherheits-Check, damit die App nicht mehr hart abstürzt, falls Passwörter fehlen
+if not USERNAME or not PASSWORD:
+    st.error("🚨 Datenbank-Zugangsdaten fehlen! Bitte in den Streamlit 'Advanced Settings' unter 'Secrets' eintragen.")
+    st.stop()
 
 @st.cache_resource
 def get_database():
