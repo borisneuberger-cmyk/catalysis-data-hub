@@ -69,7 +69,7 @@ with st.sidebar:
 
 # --- 3. MAIN DASHBOARD ---
 st.title("Catalysis Data Management System")
-st.subheader("Team 1 | MVP Release: FAIR Data Retrieval")
+st.subheader("Team 2 | MVP Release: FAIR Data Retrieval")
 st.divider()
 
 if not st.session_state.search_triggered:
